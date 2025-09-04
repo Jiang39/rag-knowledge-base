@@ -8,6 +8,7 @@ const form = ref({
 })
 
 const result = ref('')
+const pipeline = ref('')
 
 async function onSplit() {
   result.value = ''
@@ -22,6 +23,21 @@ async function onSplit() {
     })
   })
   result.value = await res.text()
+}
+
+// 调用 /api/ingest/pipeline，返回向量维度与分块数量
+async function onPipeline() {
+  pipeline.value = ''
+  const res = await fetch('http://localhost:8080/api/ingest/pipeline', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      text: form.value.text,
+      chunk: { method: 'punctuation+window', window_size: form.value.window, overlap: form.value.overlap },
+      embed_model: 'bge-small-zh-v1.5'
+    })
+  })
+  pipeline.value = await res.text()
 }
 </script>
 
@@ -40,9 +56,15 @@ async function onSplit() {
         <el-form-item>
           <el-button type="primary" @click="onSplit">调用 /api/ingest/split</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button @click="onPipeline">调用 /api/ingest/pipeline</el-button>
+        </el-form-item>
       </el-form>
       <el-card v-if="result" style="margin-top:12px;">
         <pre style="white-space:pre-wrap">{{ result }}</pre>
+      </el-card>
+      <el-card v-if="pipeline" style="margin-top:12px;">
+        <pre style="white-space:pre-wrap">{{ pipeline }}</pre>
       </el-card>
     </div>
   </div>
