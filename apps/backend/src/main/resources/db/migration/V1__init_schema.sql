@@ -1,3 +1,6 @@
+-- 启用 pgvector 扩展（需要具备创建扩展权限）
+CREATE EXTENSION IF NOT EXISTS vector;
+
 -- 初始表结构（物理删除为默认策略）
 CREATE TABLE IF NOT EXISTS document (
   id BIGSERIAL PRIMARY KEY,
