@@ -10,9 +10,17 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
+/**
+ * Web 层基础配置：
+ * - 全局 CORS 允许本地开发端口访问
+ * - 提供带超时的 RestTemplate Bean
+ */
 @Configuration
 public class WebConfig {
 
+    /**
+     * 全局 CORS 过滤器。
+     */
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
@@ -26,6 +34,9 @@ public class WebConfig {
         return new CorsFilter(source);
     }
 
+    /**
+     * RestTemplate（连接/读取超时已设置）。
+     */
     @Bean
     public RestTemplate restTemplate() {
         SimpleClientHttpRequestFactory f = new SimpleClientHttpRequestFactory();
